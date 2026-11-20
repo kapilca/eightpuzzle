@@ -1,0 +1,28 @@
+name: Build Windows executable
+
+on:
+  workflow_dispatch:   # manual trigger
+  push:
+    branches: [main, master]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+
+      - name: Build executable
+        run: pyinstaller --onefile --windowed --name eight-puzzle eight_puzzle.py
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: eight-puzzle-windows
+          path: dist/eight-puzzle.exe
